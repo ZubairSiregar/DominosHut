@@ -1,6 +1,9 @@
 package asgn2Pizzas;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+
+import asgn2Exceptions.PizzaException;
 
 
 /**
@@ -13,7 +16,12 @@ import java.time.LocalTime;
  *
  */
 public abstract class Pizza  {
-	
+	protected int quantity;
+	protected LocalTime orderTime;
+	protected LocalTime deliveryTime;
+	protected String type;
+	protected double price;
+	protected double cost;
 	/**
 	 *  This class represents a pizza produced at the Pizza Palace restaurant.  A detailed description of the class's fields
 	 *  and parameters is provided in the Assignment Specification, in particular in Section 5.1. 
@@ -32,7 +40,24 @@ public abstract class Pizza  {
 	 * 
 	 */
 	public Pizza(int quantity, LocalTime orderTime, LocalTime deliveryTime, String type, double price) throws PizzaException{
-		// TO DO	
+		// TO DO
+		if (quantity <= 0 || quantity > 10){
+			throw new PizzaException("Wrong number for pizza ordered");
+		} else if(orderTime.getHour() < 19 || orderTime.getHour() > 23){
+			throw new PizzaException("Wrong order time");
+		} else if(deliveryTime.isBefore(orderTime) == true || deliveryTime.equals(orderTime) == true || deliveryTime.until(orderTime, ChronoUnit.HOURS) > 10){
+			throw new PizzaException("Check order and delivery time");
+		} else if(type.equals("Margherita") == false && type.equals("Vegetarian") == false && type.equals("Meat Lovers") == false){
+			throw new PizzaException("Wrong type");
+		} else if(price < 0){
+			throw new PizzaException("Wrong price");
+		} else{
+			this.quantity = quantity;
+			this.orderTime = orderTime;
+			this.deliveryTime = deliveryTime;
+			this.type = type;
+			this.price = price;
+		}
 	}
 
 	/**
@@ -43,6 +68,13 @@ public abstract class Pizza  {
 	 */
 	public final void calculateCostPerPizza(){
 		// TO DO
+		if(this.type.equals("Margherita")){
+			this.cost = 1.5;
+		} else if(this.type.equals("Vegetarian")){
+			this.cost = 5.5;
+		} else{
+			this.cost = 5;
+		}
 	}
 	
 	/**
@@ -51,6 +83,7 @@ public abstract class Pizza  {
 	 */
 	public final double getCostPerPizza(){
 		// TO DO
+		return cost;
 	}
 
 	/**
@@ -59,6 +92,7 @@ public abstract class Pizza  {
 	 */
 	public final double getPricePerPizza(){
 		// TO DO
+		return price;
 	}
 
 	/**
@@ -67,6 +101,7 @@ public abstract class Pizza  {
 	 */
 	public final double getOrderCost(){
 		// TO DO
+		return cost * quantity;
 	}
 	
 	/**
@@ -75,6 +110,7 @@ public abstract class Pizza  {
 	 */
 	public final double getOrderPrice(){
 		// TO DO
+		return price * quantity;
 	}
 	
 	
@@ -84,6 +120,9 @@ public abstract class Pizza  {
 	 */
 	public final double getOrderProfit(){
 		// TO DO
+		double orderCost = getOrderCost();
+		double orderPrice = getOrderPrice();
+		return orderPrice - orderCost;
 	}
 	
 
@@ -94,6 +133,12 @@ public abstract class Pizza  {
 	 */
 	public final boolean containsTopping(PizzaTopping topping){
 		// TO DO
+		for(PizzaTopping t : PizzaTopping.values()){
+			if(t.equals(topping)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -102,6 +147,7 @@ public abstract class Pizza  {
 	 */
 	public final int getQuantity(){
 		// TO DO
+		return quantity;
 	}
 
 	/**
@@ -111,6 +157,7 @@ public abstract class Pizza  {
 	 */
 	public final String getPizzaType(){
 		// TO DO
+		return type;
 	}
 
 
