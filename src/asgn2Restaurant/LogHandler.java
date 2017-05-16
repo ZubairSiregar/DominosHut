@@ -1,12 +1,22 @@
 package asgn2Restaurant;
 
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
+
 import asgn2Customers.Customer;
 import asgn2Exceptions.CustomerException;
 import asgn2Exceptions.LogHandlerException;
 import asgn2Exceptions.PizzaException;
+import asgn2Pizzas.MargheritaPizza;
+import asgn2Pizzas.MeatLoversPizza;
 import asgn2Pizzas.Pizza;
+import asgn2Pizzas.VegetarianPizza;
 
 /**
  *
@@ -43,6 +53,24 @@ public class LogHandler {
 	 */
 	public static ArrayList<Pizza> populatePizzaDataset(String filename) throws PizzaException, LogHandlerException{
 		// TO DO
+		ArrayList<Pizza> pizzas = new ArrayList<Pizza>();
+		String path = LogHandler.class.getResource("").getPath();
+		File inFile = new File(path +"filename");
+		BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(inFile));
+            String line;
+            while ((line = br.readLine()) != null) {
+            	pizzas.add(createPizza(line));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(br != null) try {br.close(); } catch (IOException e) {}
+        }
+        return pizzas;
 	}		
 
 	
@@ -67,7 +95,30 @@ public class LogHandler {
 	 * @throws LogHandlerException - If there was a problem parsing the line from the log file.
 	 */
 	public static Pizza createPizza(String line) throws PizzaException, LogHandlerException{
-		// TO DO		
+		// TO DO
+		Pizza createdPizza;
+		String orderTime = line.split(",")[0];
+    	String deliveryTime = line.split(",")[1];
+    	String name = line.split(",")[2];
+    	String mobile = line.split(",")[3];
+    	String code = line.split(",")[4];
+    	String xLocation = line.split(",")[5];
+    	String yLocation = line.split(",")[6];
+    	String pizzaCode = line.split(",")[7];
+    	String pizzaQuantity = line.split(",")[8];
+		if(pizzaCode.equals("PZM")){
+    		MargheritaPizza PZM = new MargheritaPizza(Integer.parseInt(pizzaQuantity), LocalTime.parse(orderTime), LocalTime.parse(deliveryTime));
+    		createdPizza = PZM;
+    	} else if(pizzaCode.equals("PZV")){
+    		VegetarianPizza PZV = new VegetarianPizza(Integer.parseInt(pizzaQuantity), LocalTime.parse(orderTime), LocalTime.parse(deliveryTime));
+    		createdPizza = PZV;
+    	} else if(pizzaCode.equals("PZL")){
+    		MeatLoversPizza PZL = new MeatLoversPizza(Integer.parseInt(pizzaQuantity), LocalTime.parse(orderTime), LocalTime.parse(deliveryTime));
+    		createdPizza = PZL;
+    	} else{
+    		throw new PizzaException("Wrong pizza code");
+    	}
+		return createdPizza;
 	}
 
 }
