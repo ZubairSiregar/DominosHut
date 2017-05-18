@@ -28,6 +28,7 @@ public class PickUpCustomer extends Customer {
 	 */
 	public PickUpCustomer(String name, String mobileNumber, int locationX,  int locationY) throws CustomerException {
 		// TO DO	
+		super(name, mobileNumber, locationX, locationY, "Picking up");
 	}
 
 	/**
@@ -38,6 +39,7 @@ public class PickUpCustomer extends Customer {
 	@Override
 	public double getDeliveryDistance() {
 		// TO DO
+		return 0;
 	}
 
 }

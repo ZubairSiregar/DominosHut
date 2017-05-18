@@ -11,8 +11,9 @@ import asgn2Exceptions.CustomerException;
  * @author Person B
 */
 public abstract class Customer {
-
-
+	
+	protected String name, mobileNumber, type;
+	protected int locationX, locationY;
 	/**
 	 *  This class represents a customer of the Pizza Palace restaurant.  A detailed description of the class's fields
 	 *  and parameters is provided in the Assignment Specification, in particular in Section 5.2. 
@@ -32,6 +33,12 @@ public abstract class Customer {
 	 */
 	public Customer(String name, String mobileNumber, int locationX, int locationY, String type) throws CustomerException{
 		// TO DO
+		this.name = name;
+		this.mobileNumber = mobileNumber;
+		this.locationX = locationX;
+		this.locationY = locationY;
+		this.type = type;
+		
 	}
 	
 	/**
@@ -40,6 +47,7 @@ public abstract class Customer {
 	 */
 	public final String getName(){
 		// TO DO
+		return this.name;
 	}
 	
 	/**
@@ -48,6 +56,7 @@ public abstract class Customer {
 	 */
 	public final String getMobileNumber(){
 		// TO DO
+		return this.mobileNumber;
 	}
 
 	/**
@@ -57,6 +66,7 @@ public abstract class Customer {
 	 */
 	public final String getCustomerType(){
 		// TO DO
+		return this.type;
 	}
 	
 	/**
@@ -66,6 +76,7 @@ public abstract class Customer {
 	 */
 	public final int getLocationX(){
 		// TO DO
+		return this.locationX;
 	}
 
 	/**
@@ -75,6 +86,7 @@ public abstract class Customer {
 	 */
 	public final int getLocationY(){
 		// TO DO
+		return this.locationY;
 	}
 
 	/**

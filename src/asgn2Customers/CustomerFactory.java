@@ -29,5 +29,17 @@ public class CustomerFactory {
 	 */
 	public static Customer getCustomer(String customerCode, String name, String mobileNumber, int locationX,  int locationY) throws CustomerException{
 		// TO DO
+		if(customerCode == "PUC"){
+			return new PickUpCustomer(name, mobileNumber, locationX, locationY);
+		}
+		else if(customerCode == "DVC"){
+			return new DriverDeliveryCustomer(name, mobileNumber, locationX, locationY);
+		}
+		else if(customerCode == "DNC"){
+			return new DroneDeliveryCustomer(name, mobileNumber, locationX, locationY);
+		}
+		else{
+			throw new CustomerException("Invalid Code");
+		}
 	}
 }
