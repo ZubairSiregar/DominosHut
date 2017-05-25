@@ -1,8 +1,15 @@
 package asgn2Restaurant;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import asgn2Customers.Customer;
+import asgn2Exceptions.CustomerException;
+import asgn2Exceptions.LogHandlerException;
 import asgn2Exceptions.PizzaException;
 import asgn2Pizzas.Pizza;
 
@@ -55,6 +62,49 @@ public class PizzaRestaurant {
 	 */
 	public boolean processLog(String filename) throws CustomerException, PizzaException, LogHandlerException{
 		// TO DO
+		String path = LogHandler.class.getResource("").getPath();
+		File inFile = new File(path +"filename");
+		BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(inFile));
+            String line;
+            while ((line = br.readLine()) != null) {
+            	String orderTime = line.split(",")[0];
+            	timeChecker(orderTime);
+            	
+            	String deliveryTime = line.split(",")[1];
+            	timeChecker(deliveryTime);
+            	
+            	String name = line.split(",")[2];
+            	nameChecker(name);
+            	
+            	String mobile = line.split(",")[3];
+            	phoneChecker(mobile);
+            	
+            	String code = line.split(",")[4];
+            	codeChecker(code);
+            	
+            	String xLocation = line.split(",")[5];
+            	String yLocation = line.split(",")[6];
+            	locationChecker(xLocation, yLocation);
+            	
+            	String pizzaCode = line.split(",")[7];
+            	if(pizzaCode != "PZM" && pizzaCode != "PZV" && pizzaCode != "PZL"){
+        	    	throw new PizzaException("wrong value for " + pizzaCode);
+            	}
+            	
+            	String pizzaQuantity = line.split(",")[8];
+            	quantityChecker(pizzaQuantity);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(br != null) try {br.close(); } catch (IOException e) {}
+        }
+        
+        return true;
 	}
 
 	/**
@@ -135,6 +185,84 @@ public class PizzaRestaurant {
 	 */
 	public void resetDetails(){
 		// TO DO
+		this.pizzas.clear();
+		this.customers.clear();
+	}
+	
+	public static boolean isStringDouble(String s) {
+	    try {
+	        Double.parseDouble(s);
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	 }
+	
+	public static boolean timeChecker(String s) throws CustomerException, PizzaException, LogHandlerException{
+	    if(s.split(":").length != 3){
+	    	throw new LogHandlerException("wrong value for " + s);
+	    }
+	    String[] time = new String[3];
+	    
+	    for(int i = 0; i < s.split(":").length; i++){
+	    	time[i] = s.split(":")[i];
+	    }
+	    
+	    for(int i = 0; i < time.length; i++){
+	    	if(isStringDouble(time[i]) == false){
+		    	throw new LogHandlerException("wrong value for " + s);
+	    	}
+	    }
+	    
+	    return true;
+	 }
+	
+	public static boolean nameChecker(String s) throws CustomerException, PizzaException, LogHandlerException{
+		if(s.split(" ").length != 2){
+	    	throw new CustomerException("wrong value for " + s);
+	    }
+		
+		return true;
+	}
+	
+	public static boolean phoneChecker(String s) throws CustomerException, PizzaException, LogHandlerException{
+		if(s.length() != 10){
+	    	throw new CustomerException("wrong value for " + s);
+	    }
+		
+		if(isStringDouble(s) == false){
+	    	throw new CustomerException("wrong value for " + s);
+		}
+		
+		return true;
+	}
+	
+	public static boolean codeChecker(String s) throws CustomerException, PizzaException, LogHandlerException{
+		if(s.length() != 3){
+	    	throw new CustomerException("wrong value for " + s);
+	    }
+		
+		return true;
+	}
+	
+	public static boolean locationChecker(String x, String y) throws CustomerException, PizzaException, LogHandlerException{
+		if(isStringDouble(x) == false || isStringDouble(y) == false){
+	    	throw new CustomerException("wrong value for locations");
+	    }
+		
+		return true;
+	}
+	
+	public static boolean quantityChecker(String s) throws CustomerException, PizzaException, LogHandlerException{
+		if(isStringDouble(s) == false){
+	    	throw new CustomerException("wrong value for locations");
+	    }
+		
+		if(Integer.parseInt(s) > 10){
+	    	throw new CustomerException("wrong value for locations");
+		}
+		
+		return true;
 	}
 
 }
