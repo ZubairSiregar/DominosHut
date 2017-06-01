@@ -30,6 +30,14 @@ public class PizzaFactory {
 	 * */
 	public static Pizza getPizza(String pizzaCode, int quantity, LocalTime orderTime, LocalTime deliveryTime) throws PizzaException{
 		// TO DO
+		if(pizzaCode == "PZM"){
+			return new MargheritaPizza(quantity, orderTime, deliveryTime);
+		}else if (pizzaCode == "PZV"){
+			return new MeatLoversPizza(quantity, orderTime, deliveryTime);
+		}else if (pizzaCode == "PZL"){
+			return new VegetarianPizza(quantity, orderTime, deliveryTime);
+		}		
+		throw new PizzaException("Pizza code is not valid as per specification.\nPizza Code provided: " + pizzaCode);
 	}
 
 }
