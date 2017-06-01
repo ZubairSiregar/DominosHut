@@ -115,6 +115,11 @@ public class PizzaRestaurant {
 	 */
 	public Customer getCustomerByIndex(int index) throws CustomerException{
 		// TO DO
+		if(index > customers.size() - 1){
+			throw new CustomerException("Wrong index");
+			
+		}
+		return customers.get(index);
 	}
 	
 	/**
@@ -150,6 +155,7 @@ public class PizzaRestaurant {
 	 */
 	public int getNumCustomerOrders(){
 		// TO DO
+		return customers.size();
 	}
 
 			
@@ -161,6 +167,11 @@ public class PizzaRestaurant {
 	 */
 	public double getTotalDeliveryDistance(){
 		// TO DO
+		double totalDistance = 0;
+		for(Customer custom: customers){
+			totalDistance += custom.getDeliveryDistance();
+		}
+		return totalDistance;
 	}
 
 	/**
