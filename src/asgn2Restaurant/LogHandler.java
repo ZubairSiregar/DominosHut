@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 import asgn2Customers.Customer;
+import asgn2Customers.CustomerFactory;
 import asgn2Exceptions.CustomerException;
 import asgn2Exceptions.LogHandlerException;
 import asgn2Exceptions.PizzaException;
@@ -41,7 +42,24 @@ public class LogHandler {
 	 */
 	public static ArrayList<Customer> populateCustomerDataset(String filename) throws CustomerException, LogHandlerException{
 		// TO DO
-	}		
+		ArrayList<Customer> customers = new ArrayList<Customer>();
+		BufferedReader br = null;
+		
+		try{
+			br = new BufferedReader(new FileReader(filename));
+			String line;
+			while((line = br.readLine()) != null){
+				customers.add(createCustomer(line));
+			}
+			br.close();
+		} catch (IOException e){
+			e.printStackTrace();
+			throw new LogHandlerException("Problem reading lines from file");
+		}
+		return customers;
+	}	
+		
+			
 
 	/**
 	 * Returns an ArrayList of Pizza objects from the information contained in the log file ordered as they appear in the log file. .
@@ -84,6 +102,20 @@ public class LogHandler {
 	 */
 	public static Customer createCustomer(String line) throws CustomerException, LogHandlerException{
 		// TO DO
+		String[] entries = line.split(",");
+		if(entries.length != 9){
+			throw new LogHandlerException("Problem paarsing line from log file");
+		}
+		
+		
+		String name = entries[2];
+		String mobileNumber = entries[3];
+		String customerCode = entries[4];
+		int locationX = Integer.parseInt(entries[5]);
+		int locationY = Integer.parseInt(entries[6]);
+		
+		
+		return CustomerFactory.getCustomer(customerCode, name, mobileNumber, locationX, locationY);
 	}
 	
 	/**

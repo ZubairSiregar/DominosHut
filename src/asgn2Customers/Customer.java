@@ -33,6 +33,22 @@ public abstract class Customer {
 	 */
 	public Customer(String name, String mobileNumber, int locationX, int locationY, String type) throws CustomerException{
 		// TO DO
+		
+		if(name.trim().length() < 1){
+			throw new CustomerException("Customer name cannot be empty");
+		}
+		if(name.length() > 20){
+			throw new CustomerException("Name is too long. Name cannot be more than 20 characters");
+		}
+		if(mobileNumber.charAt(0) != '0'){
+			throw new CustomerException("Mobile Number needs to start with a '0'");
+		}
+		if(mobileNumber.length() != 10){
+			throw new CustomerException("Error. mobile number needs to be exactly 10 digits");
+		}
+		if(locationX > 10 || locationX < -10 || locationY > 10 || locationY < -10){
+			throw new CustomerException("Location cannot be more than 10 blocks away from restaurant");
+		}
 		this.name = name;
 		this.mobileNumber = mobileNumber;
 		this.locationX = locationX;
