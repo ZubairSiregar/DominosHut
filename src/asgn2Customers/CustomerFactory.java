@@ -8,7 +8,7 @@ import asgn2Exceptions.CustomerException;
  * The classes are instantiated from one of the three valid customer codes outlined in
  * Section 5.3 of the Assignment Specification. Any other code will throw a CustomerException.   
  *     
- * @author Person B
+ * @author Zubair Siregar
  *
  */
 

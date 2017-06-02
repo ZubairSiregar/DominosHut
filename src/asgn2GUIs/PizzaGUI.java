@@ -18,7 +18,7 @@ import javax.swing.table.*;
  * You can also use this class and asgn2Wizards.PizzaWizard to test your system as a whole
  * 
  * 
- * @author Person A and Person B
+ * @author Lei Wang
  *
  */
 

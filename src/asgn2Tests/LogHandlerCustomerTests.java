@@ -14,7 +14,7 @@ import asgn2Restaurant.LogHandler;
 /**
  * A class that tests the methods relating to the creation of Customer objects in the asgn2Restaurant.LogHander class.
  *
- * @author Person A 
+ * @author Lei Wang
  */
 public class LogHandlerCustomerTests {	
 	@Test(expected = LogHandlerException.class)

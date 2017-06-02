@@ -15,7 +15,7 @@ import asgn2Pizzas.PizzaTopping;
 /** 
  * A class that tests the asgn2Pizzas.PizzaFactory class.
  * 
- * @author Person B 
+ * @author Zubair Siregar
  * 
  */
 public class PizzaFactoryTests {

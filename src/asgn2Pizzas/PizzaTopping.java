@@ -5,7 +5,7 @@ package asgn2Pizzas;
  * It also contains a method to retrieve a cost for a specific topping. The toppings
  * and their costs are specified in the Assignment Specification in Section 5.1. 
  * 
- * @author Alan Woodley
+ * @author Lei Wang
  *
  */
 public enum PizzaTopping {
