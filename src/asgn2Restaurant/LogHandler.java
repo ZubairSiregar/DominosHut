@@ -17,6 +17,7 @@ import asgn2Exceptions.PizzaException;
 import asgn2Pizzas.MargheritaPizza;
 import asgn2Pizzas.MeatLoversPizza;
 import asgn2Pizzas.Pizza;
+import asgn2Pizzas.PizzaFactory;
 import asgn2Pizzas.VegetarianPizza;
 
 /**
@@ -46,13 +47,13 @@ public class LogHandler {
 		BufferedReader br = null;
 		
 		try{
-			br = new BufferedReader(new FileReader(filename));
 			String line;
+			br = new BufferedReader(new FileReader(filename));
 			while((line = br.readLine()) != null){
 				customers.add(createCustomer(line));
 			}
 			br.close();
-		} catch (IOException e){
+		} catch (Exception e){
 			e.printStackTrace();
 			throw new LogHandlerException("Problem reading lines from file");
 		}
@@ -89,6 +90,7 @@ public class LogHandler {
             if(br != null) try {br.close(); } catch (IOException e) {}
         }
         return pizzas;
+		
 	}		
 
 	
@@ -151,6 +153,7 @@ public class LogHandler {
     		throw new PizzaException("Wrong pizza code");
     	}
 		return createdPizza;
+		
 	}
 
 }
