@@ -1,24 +1,24 @@
 package asgn2Restaurant;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalTime;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 import asgn2Customers.Customer;
 import asgn2Customers.CustomerFactory;
 import asgn2Exceptions.CustomerException;
 import asgn2Exceptions.LogHandlerException;
 import asgn2Exceptions.PizzaException;
-import asgn2Pizzas.MargheritaPizza;
-import asgn2Pizzas.MeatLoversPizza;
 import asgn2Pizzas.Pizza;
 import asgn2Pizzas.PizzaFactory;
-import asgn2Pizzas.VegetarianPizza;
 
 /**
  *
@@ -26,7 +26,7 @@ import asgn2Pizzas.VegetarianPizza;
  * and Customer object - either as an individual Pizza/Customer object or as an
  * ArrayList of Pizza/Customer objects.
  * 
- * @author Lei Wang and Zubair Siregar
+ * @author Person B - Bradley Caferra
  *
  */
 public class LogHandler {
@@ -42,25 +42,22 @@ public class LogHandler {
 	 * 
 	 */
 	public static ArrayList<Customer> populateCustomerDataset(String filename) throws CustomerException, LogHandlerException{
-		// TO DO
-		ArrayList<Customer> customers = new ArrayList<Customer>();
-		BufferedReader br = null;
 		
-		try{
-			String line;
-			br = new BufferedReader(new FileReader(filename));
-			while((line = br.readLine()) != null){
-				customers.add(createCustomer(line));
-			}
-			br.close();
-		} catch (Exception e){
-			e.printStackTrace();
-			throw new LogHandlerException("Problem reading lines from file");
-		}
-		return customers;
-	}	
+		ArrayList<Customer> Listcustomer = new ArrayList<>();
 		
+		try (Stream<String> fileLines = Files.lines(Paths.get(new File(filename).toURI()))) {
+			for (String line : fileLines.collect(Collectors.toList())) Listcustomer.add(createCustomer(line));
 			
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			throw new LogHandlerException("Cannot read file: " 
+			+ filename);
+		}
+				
+				
+		return Listcustomer;
+		
+	}		
 
 	/**
 	 * Returns an ArrayList of Pizza objects from the information contained in the log file ordered as they appear in the log file. .
@@ -71,25 +68,20 @@ public class LogHandler {
 	 * 
 	 */
 	public static ArrayList<Pizza> populatePizzaDataset(String filename) throws PizzaException, LogHandlerException{
-		// TO DO
-		ArrayList<Pizza> pizzas = new ArrayList<Pizza>();
-		String path = LogHandler.class.getResource("").getPath();
-		File inFile = new File(path +"filename");
-		BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(inFile));
-            String line;
-            while ((line = br.readLine()) != null) {
-            	pizzas.add(createPizza(line));
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if(br != null) try {br.close(); } catch (IOException e) {}
-        }
-        return pizzas;
+		
+		ArrayList<Pizza> pizzaList = new ArrayList<>();
+		
+		try (Stream<String> fileLines = Files.lines(Paths.get(new File(filename).toURI()))) {
+			for (String line : fileLines.collect(Collectors.toList()))	pizzaList.add(createPizza(line));
+			
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			throw new LogHandlerException("Can not read file: " 
+			+ filename);
+		}
+				
+				
+		return pizzaList;
 		
 	}		
 
@@ -103,21 +95,33 @@ public class LogHandler {
 	 * @throws LogHandlerException - If there was a problem parsing the line from the log file.
 	 */
 	public static Customer createCustomer(String line) throws CustomerException, LogHandlerException{
-		// TO DO
-		String[] entries = line.split(",");
-		if(entries.length != 9){
-			throw new LogHandlerException("Problem paarsing line from log file");
+		
+		String[] Values;
+		
+		try{
+			Values = line.split(",");
+		} catch(Exception ex) {
+			throw new LogHandlerException("problem pasring line" 
+		+ ex);
 		}
 		
+		try{
+			return CustomerFactory.getCustomer(Values[4], 
+					Values[2],
+					Values[3],
+					Integer.parseInt(Values[5]), 
+					Integer.parseInt(Values[6]));
+		} catch(CustomerException ex){
+			throw new LogHandlerException("Customer code is Invalid" 
+		+ ex);
+		}
+		catch (Exception ex){
+			throw new LogHandlerException("Line input:" 
+		+ line 
+		+ " is not valid " 
+		+ ex);
+		}
 		
-		String name = entries[2];
-		String mobileNumber = entries[3];
-		String customerCode = entries[4];
-		int locationX = Integer.parseInt(entries[5]);
-		int locationY = Integer.parseInt(entries[6]);
-		
-		
-		return CustomerFactory.getCustomer(customerCode, name, mobileNumber, locationX, locationY);
 	}
 	
 	/**
@@ -128,31 +132,68 @@ public class LogHandler {
 	 * @throws PizzaException If the log file contains semantic errors leading that violate the pizza constraints listed in Section 5.3 of the Assignment Specification or contain an invalid pizza code (passed by another class).
 	 * @throws LogHandlerException - If there was a problem parsing the line from the log file.
 	 */
+	
 	public static Pizza createPizza(String line) throws PizzaException, LogHandlerException{
-		// TO DO
-		Pizza createdPizza;
-		String orderTime = line.split(",")[0];
-    	String deliveryTime = line.split(",")[1];
-    	String name = line.split(",")[2];
-    	String mobile = line.split(",")[3];
-    	String code = line.split(",")[4];
-    	String xLocation = line.split(",")[5];
-    	String yLocation = line.split(",")[6];
-    	String pizzaCode = line.split(",")[7];
-    	String pizzaQuantity = line.split(",")[8];
-		if(pizzaCode.equals("PZM")){
-    		MargheritaPizza PZM = new MargheritaPizza(Integer.parseInt(pizzaQuantity), LocalTime.parse(orderTime), LocalTime.parse(deliveryTime));
-    		createdPizza = PZM;
-    	} else if(pizzaCode.equals("PZV")){
-    		VegetarianPizza PZV = new VegetarianPizza(Integer.parseInt(pizzaQuantity), LocalTime.parse(orderTime), LocalTime.parse(deliveryTime));
-    		createdPizza = PZV;
-    	} else if(pizzaCode.equals("PZL")){
-    		MeatLoversPizza PZL = new MeatLoversPizza(Integer.parseInt(pizzaQuantity), LocalTime.parse(orderTime), LocalTime.parse(deliveryTime));
-    		createdPizza = PZL;
-    	} else{
-    		throw new PizzaException("Wrong pizza code");
-    	}
-		return createdPizza;
+		
+		String[] Valuesline;
+		try{
+			Valuesline = line.split(",");
+		} catch(Exception ex) {
+			throw new LogHandlerException("Encountered problem pasring line" 
+		+ ex);
+		}
+		
+		String pizzaCode = null;
+		try{
+			pizzaCode = Valuesline[7];
+		}catch (Exception ex){
+			throw new LogHandlerException("Line input:" 
+		+ line 
+		+ " is not valid " 
+		+ ex);
+		}
+		
+				
+		int quan = 0;
+		try {
+			quan = Integer.parseInt(Valuesline[8]);
+		} catch (Exception ex) {	
+			throw new LogHandlerException("Line input:" 
+		+ line 
+		+ " is not valid " 
+		+ ex);
+		}
+		
+		String[] timest = Valuesline[0].split(":");
+		if (timest.length < 3) {
+			throw new LogHandlerException("Not enough time passed");
+		}
+		LocalTime orderTime = null;
+		try {
+			int timeHour = Integer.parseInt(timest[0]), timeMinute = Integer.parseInt(timest[1]), timeSecond = Integer.parseInt(timest[2]);
+			orderTime = LocalTime.of(timeHour, timeMinute, timeSecond);
+		} catch (Exception ex) {
+			throw new LogHandlerException("Line input:" + 
+		line + 
+		" is not valid " 
+		+ ex);
+		}
+		
+
+		timest = Valuesline[1].split(":");
+		if (timest.length < 3) throw new LogHandlerException("Not enough time passed");
+		LocalTime deliveryTime = null;
+		try {
+			int timeHour = Integer.parseInt(timest[0]), timeMinute = Integer.parseInt(timest[1]), timeSecond = Integer.parseInt(timest[2]);
+
+			deliveryTime = LocalTime.of(timeHour, timeMinute, timeSecond);
+		} catch (Exception ex) {
+			throw new LogHandlerException("Line input:" + line + " is not valid " + ex);
+		}
+
+		return PizzaFactory.getPizza(pizzaCode, quan, orderTime, deliveryTime);		
+		
+		
 		
 	}
 
