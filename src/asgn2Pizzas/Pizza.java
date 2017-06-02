@@ -17,8 +17,8 @@ import asgn2Exceptions.PizzaException;
  */
 public abstract class Pizza  {
 	protected int quantity;
-	protected LocalTime orderTime;
-	protected LocalTime deliveryTime;
+	public LocalTime orderTime;
+	public LocalTime deliveryTime;
 	protected String type;
 	protected double price;
 	protected double cost;
